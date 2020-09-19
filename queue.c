@@ -163,6 +163,8 @@ void sort_recur(list_ele_t **headref)
     }
     head_tmp = *headref;
 
+    /* compare values in 2 partitions and
+     * reorder them in combined partition */
     while (true) {
         if (head == NULL) {
             head_tmp->next = right_head;
