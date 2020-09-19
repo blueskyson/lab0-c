@@ -111,26 +111,81 @@ int q_size(queue_t *q)
     return q->size;
 }
 
-/*
- * Reverse elements in queue
- * No effect if q is NULL or empty
- * This function should not allocate or free any list elements
- * (e.g., by calling q_insert_head, q_insert_tail, or q_remove_head).
- * It should rearrange the existing ones.
- */
 void q_reverse(queue_t *q)
 {
-    /* TODO: You need to write the code for this function */
-    /* TODO: Remove the above comment when you are about to implement. */
+    if (!q || !(q->head))
+        return;
+    list_ele_t *prev, *curr, *next;
+    prev = q->head;
+    q->tail = q->head;
+    curr = prev->next;
+    while (curr) {
+        next = curr->next;
+        curr->next = prev;
+        prev = curr;
+        curr = next;
+    }
+    q->head = prev;
+    q->tail->next = NULL;
 }
 
-/*
- * Sort elements of queue in ascending order
- * No effect if q is NULL or empty. In addition, if q has only one
- * element, do nothing.
- */
+void sort_recur(list_ele_t **headref)
+{
+    list_ele_t *head = *headref;
+    if (head == NULL || head->next == NULL)
+        return;
+
+    /* find the middle node */
+    list_ele_t *fast = head->next, *slow = head;
+    while (fast != NULL) {
+        fast = fast->next;
+        if (fast != NULL) {
+            fast = fast->next;
+            slow = slow->next;
+        }
+    }
+
+    /* partition */
+    list_ele_t *right_head = slow->next;
+    slow->next = NULL;
+    sort_recur(&head);
+    sort_recur(&right_head);
+    list_ele_t *head_tmp;
+
+    /* find out the smallest node in 2 partitions
+     * and set it as the head of combined partition */
+    if (strcmp(head->value, right_head->value) <= 0) {
+        *headref = head;
+        head = head->next;
+    } else {
+        *headref = right_head;
+        right_head = right_head->next;
+    }
+    head_tmp = *headref;
+
+    while (true) {
+        if (head == NULL) {
+            head_tmp->next = right_head;
+            break;
+        } else if (right_head == NULL) {
+            head_tmp->next = head;
+            break;
+        }
+
+        if (strcmp(head->value, right_head->value) <= 0) {
+            head_tmp->next = head;
+            head = head->next;
+        } else {
+            head_tmp->next = right_head;
+            right_head = right_head->next;
+        }
+        head_tmp = head_tmp->next;
+    }
+}
+
 void q_sort(queue_t *q)
 {
-    /* TODO: You need to write the code for this function */
-    /* TODO: Remove the above comment when you are about to implement. */
+    if (!q || q->size < 2)
+        return;
+    sort_recur(&(q->head));
 }
