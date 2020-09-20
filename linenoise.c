@@ -1191,7 +1191,6 @@ static void freeHistory(void)
 {
     if (history) {
         int j;
-
         for (j = 0; j < history_len; j++)
             free(history[j]);
         free(history);
@@ -1352,4 +1351,14 @@ void completion(const char *buf, linenoiseCompletions *lc)
         linenoiseAddCompletion(lc, "reverse");
     }
     /* append more command if you want */
+}
+
+void deleteHistory(void)
+{
+    if (history) {
+        int j;
+        for (j = 0; j < history_len; j++)
+            free(history[j]);
+        free(history);
+    }
 }

@@ -70,6 +70,7 @@ void linenoiseMaskModeEnable(void);
 void linenoiseMaskModeDisable(void);
 void completion(const char *buf, linenoiseCompletions *lc);
 int completion_helper(const char *target, const char *cur);
+void deleteHistory(void);
 #ifdef __cplusplus
 }
 #endif
